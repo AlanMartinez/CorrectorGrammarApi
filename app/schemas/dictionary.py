@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import List
 
 class DictionaryItemCreate(BaseModel):
     user_id: str
@@ -10,8 +9,13 @@ class DictionaryItemResponse(BaseModel):
     item: str
     user_id: str
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class DictionaryItemsResponse(BaseModel):
-    items: List[DictionaryItemResponse] 
+    items: list[DictionaryItemResponse]
+    
+    model_config = {
+        "from_attributes": True
+    } 

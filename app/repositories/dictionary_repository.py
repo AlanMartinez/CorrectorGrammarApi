@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.models.database import User, DictionaryItem
 
@@ -9,11 +8,11 @@ class IDictionaryRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all_dictionary_items(self, user_id: str) -> List[DictionaryItem]:
+    def get_all_dictionary_items(self, user_id: str) -> list[DictionaryItem]:
         pass
 
     @abstractmethod
-    def find_matching_item(self, user_id: str, item: str) -> Optional[DictionaryItem]:
+    def find_matching_item(self, user_id: str, item: str) -> DictionaryItem | None:
         pass
 
 class DictionaryRepository(IDictionaryRepository):
@@ -34,10 +33,10 @@ class DictionaryRepository(IDictionaryRepository):
         self.db_session.commit()
         return dictionary_item
 
-    def get_all_dictionary_items(self, user_id: str) -> List[DictionaryItem]:
+    def get_all_dictionary_items(self, user_id: str) -> list[DictionaryItem]:
         return self.db_session.query(DictionaryItem).filter(DictionaryItem.user_id == user_id).all()
 
-    def find_matching_item(self, user_id: str, item: str) -> Optional[DictionaryItem]:
+    def find_matching_item(self, user_id: str, item: str) -> DictionaryItem | None:
         return self.db_session.query(DictionaryItem).filter(
             DictionaryItem.user_id == user_id,
             DictionaryItem.item.ilike(item)  # Case-insensitive comparison using SQL ILIKE

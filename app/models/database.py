@@ -8,6 +8,8 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(String, primary_key=True)
+    email = Column(String, unique=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
     dictionary_items = relationship("DictionaryItem", back_populates="user")
 
 class DictionaryItem(Base):

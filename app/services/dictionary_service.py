@@ -1,4 +1,3 @@
-from typing import List
 from app.repositories.dictionary_repository import IDictionaryRepository
 from app.models.database import DictionaryItem
 
@@ -13,5 +12,5 @@ class DictionaryService:
         
         return self.repository.add_dictionary_item(user_id, item)
 
-    def get_all_dictionary_items(self, user_id: str) -> List[DictionaryItem]:
+    def get_all_dictionary_items(self, user_id: str) -> list[DictionaryItem]:
         return self.repository.get_all_dictionary_items(user_id) 
