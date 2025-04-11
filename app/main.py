@@ -15,7 +15,7 @@ from app.services.auth_service import (
     ACCESS_TOKEN_EXPIRE_MINUTES
 )
 from app.schemas.dictionary import DictionaryItemCreate, DictionaryItemResponse, DictionaryItemsResponse
-from app.schemas.auth import UserCreate, Token
+from app.schemas.auth import UserCreate, Token, TokenData
 from app.database import get_db
 
 app = FastAPI(title="Dictionary API")
@@ -76,6 +76,14 @@ def login_for_access_token(
         expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer", "user_id": user.id}
+
+@app.get("/validate-token", response_model=TokenData)
+async def validate_token(current_user: User = Depends(get_current_user)):
+    """
+    Validate the JWT token and return the user's information.
+    This endpoint can be used by other services to verify if a token is valid.
+    """
+    return TokenData(email=current_user.email, user_id=current_user.id)
 
 @app.post("/dictionary", response_model=DictionaryItemResponse)
 def add_dictionary_item(

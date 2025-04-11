@@ -7,15 +7,12 @@ class DictionaryItemCreate(BaseModel):
 class DictionaryItemResponse(BaseModel):
     id: int
     item: str
-    user_id: str
 
-    model_config = {
-        "from_attributes": True
-    }
+    class Config:
+        orm_mode = True
 
 class DictionaryItemsResponse(BaseModel):
     items: list[DictionaryItemResponse]
-    
-    model_config = {
-        "from_attributes": True
-    } 
+
+    class Config:
+        orm_mode = True 
