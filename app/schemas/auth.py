@@ -19,6 +19,7 @@ class UserLogin(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    user_id: str | None = None
 
     model_config = {
         "from_attributes": True
@@ -26,6 +27,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: str | None = None
+    user_id: str | None = None
 
     model_config = {
         "from_attributes": True

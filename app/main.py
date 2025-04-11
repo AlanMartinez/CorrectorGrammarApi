@@ -44,7 +44,7 @@ def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     
     # Create new user
     hashed_password = get_password_hash(user_data.password)
-    db_user = User(email=user_data.email, hashed_password=hashed_password, id=user_data.email)
+    db_user = User(email=user_data.email, hashed_password=hashed_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -52,9 +52,10 @@ def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     # Create access token
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user_data.email}, expires_delta=access_token_expires
+        data={"sub": user_data.email, "user_id": db_user.id},
+        expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer", "user_id": db_user.id}
 
 @app.post("/token", response_model=Token)
 def login_for_access_token(
@@ -71,9 +72,10 @@ def login_for_access_token(
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={"sub": user.email, "user_id": user.id},
+        expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer", "user_id": user.id}
 
 @app.post("/dictionary", response_model=DictionaryItemResponse)
 def add_dictionary_item(
